@@ -12,8 +12,6 @@ class Reply(models.Model):
     content = models.CharField(verbose_name='Content', max_length=250)
     marked_as_deleted = models.BooleanField(verbose_name='Marked as deleted', default=False)
 
-    objects = models.Model()
-
     class Meta:
         verbose_name = 'Reply'
         verbose_name_plural = 'Replies'
