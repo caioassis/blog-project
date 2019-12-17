@@ -33,7 +33,7 @@ class Post(models.Model):
     title = models.CharField(verbose_name='Title', max_length=50)
     author = models.ForeignKey(verbose_name='Author', to=User, on_delete=models.SET_NULL, null=True)
     content = models.TextField(verbose_name='Content')
-    replies = models.ManyToManyField(verbose_name='Replies', to=Reply)
+    replies = models.ManyToManyField(verbose_name='Replies', to=Reply, null=True, blank=True)
     created_at = models.DateTimeField(verbose_name='Creation Date', auto_now_add=True, blank=True)
     published = models.BooleanField(default=False)
     deleted = models.BooleanField(verbose_name='Deleted', default=False)
@@ -54,5 +54,5 @@ class Post(models.Model):
         indexes = [
             models.Index(fields=['title'], name='idx_post_title'),
             models.Index(fields=['author'], name='idx_post_author'),
-            models.Index(fields=['author'], name='idx_post_author'),
+            models.Index(fields=['created_at'], name='idx_post_created_at'),
         ]
