@@ -1,13 +1,35 @@
-{% extends 'posts/base.html' %}
+{% extends 'base.html' %}
 {% block content %}
-{% for post in posts %}
-<div>
-    <p>{{ post.title }}</p>
-    <p>{{ post.content|truncatechars:300 }}</p>
-    <p>{{ post.created_at|date:"m/d/Y H:i" }}</p>
-    <p>{{ post.replies.count }} Repl{{ post.replies.count|pluralize:"y,ies" }}</p>
+<div class="container">
+    {% for post in posts %}
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+
+                <img width="200" height="200" src="{{ post.thumbnail.url|default:'https://via.placeholder.com/200' }}" class="card-img" alt="{{ post.title }}">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.content|truncatechars:300 }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">By: {{ post.author.username }} at {{ post.created_at|date:"m/d/Y H:i" }}</small>
+                        &nbsp;
+                        <span class="badge badge-primary">{{ post.replies.count }} Repl{{ post.replies.count|pluralize:"y,ies" }}</span>
+                        <span class="float-right">
+                            <a class="" href="{% url 'posts:post_detail' post.pk %}">Details</a>
+                            {% if request.user.is_superuser or request.user == post.author %}
+                            |
+                            <a class="" href="">Delete</a>
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>There are no posts</p>
+    {% endfor %}
 </div>
-{% empty %}
-<p>There are no posts</p>
-{% endfor %}
 {% endblock %}
