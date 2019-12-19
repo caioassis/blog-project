@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <h5>Authors</h5>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            <th scope="col">Active</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for author in authors %}
+        <tr>
+            <th scope="row">{{ author.pk }}</th>
+            <td>{{ author.username }}</td>
+            <td>{{ author.email }}</td>
+            <td>{% if author.is_active %}Yes{% else %}No{% endif %}</td>
+            <td>
+                <a href="{% url 'core:author_update' author.pk %}">
+                    <i class="fa fa-pencil"></i>
+                </a>
+                &nbsp;
+                <a href="{% url 'core:author_delete' author.pk %}">
+                    <i class="fa fa-times"></i>
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <h6>There are no authors.</h6>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -32,3 +32,14 @@ class SignupForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'password': forms.PasswordInput(attrs={'class': 'form-control'})
         }
+
+
+class AuthorForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'is_active']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }
