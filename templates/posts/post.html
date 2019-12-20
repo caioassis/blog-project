@@ -43,7 +43,7 @@
                 </div>
             </form>
             <hr>
-            {% with replies=post.replies.all.filter(marked_as_deleted=True) %}
+            {% with replies=post.replies.all %}
             <h6>{{ replies.count }} Repl{{ replies.count|pluralize:"y,ies" }}</h6>
                 {% if replies %}
                 <br>
