@@ -9,6 +9,9 @@ class PostQuerySet(QuerySet):
     def unpublished(self):
         return self.filter(approved=False)
 
+    def delete(self):
+        return super().update(marked_as_deleted=True)
+
 
 class ReplyQuerySet(QuerySet):
 
@@ -17,3 +20,6 @@ class ReplyQuerySet(QuerySet):
 
     def unapproved(self):
         return self.filter(approved=False)
+
+    def delete(self):
+        return super().update(marked_as_deleted=True)
