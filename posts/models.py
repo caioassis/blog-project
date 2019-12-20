@@ -1,6 +1,6 @@
 import uuid
 from django.contrib.auth import get_user_model
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 from .managers import PostManager, ReplyManager
 from .querysets import PostQuerySet, ReplyQuerySet
@@ -20,6 +20,11 @@ class Reply(models.Model):
     def approve(self):
         self.approved = True
         self.save()
+
+    def delete(self):
+        self.marked_as_deleted = True
+        self.save()
+        return
 
     class Meta:
         verbose_name = 'Reply'
@@ -42,7 +47,7 @@ class Post(models.Model):
     title = models.CharField(verbose_name='Title', max_length=50)
     author = models.ForeignKey(verbose_name='Author', to=User, related_name='posts', on_delete=models.SET_NULL, null=True)
     content = models.TextField(verbose_name='Content')
-    replies = models.ManyToManyField(verbose_name='Replies', to=Reply, null=True, blank=True)
+    replies = models.ManyToManyField(verbose_name='Replies', to=Reply, blank=True)
     created_at = models.DateTimeField(verbose_name='Creation Date', auto_now_add=True, blank=True)
     approved = models.BooleanField(default=False)
     marked_as_deleted = models.BooleanField(verbose_name='Deleted', default=False)
@@ -63,6 +68,15 @@ class Post(models.Model):
     def approve(self):
         self.approved = True
         self.save()
+
+    def delete(self):
+        # Ensure post deletion occurs inside a transaction, which means it has to delete both post and its replies or
+        # don't delete any at all.
+        with transaction.atomic():
+            self.marked_as_deleted = True
+            self.save()
+            self.replies.delete()
+        return
 
     class Meta:
         verbose_name = 'Post'
