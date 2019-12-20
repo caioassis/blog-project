@@ -10,12 +10,6 @@ class PostManager(Manager):
         """
         return super().get_queryset().filter(marked_as_deleted=False)
 
-    def published(self):
-        return self.get_queryset().published()
-
-    def unpublished(self):
-        return self.get_queryset().unpublished()
-
 
 class ReplyManager(Manager):
 
@@ -25,5 +19,3 @@ class ReplyManager(Manager):
         :return:
         """
         return super().get_queryset().filter(marked_as_deleted=False)
-
-

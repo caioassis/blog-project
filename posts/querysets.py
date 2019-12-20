@@ -12,5 +12,8 @@ class PostQuerySet(QuerySet):
 
 class ReplyQuerySet(QuerySet):
 
-    def approved_only(self):
+    def approved(self):
         return self.filter(approved=True)
+
+    def unapproved(self):
+        return self.filter(approved=False)
