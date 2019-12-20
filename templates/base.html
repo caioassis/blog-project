@@ -34,7 +34,7 @@
                 </li>
                 {% else %}
                 <li>
-                    <a href="#" class="nav-link">My Posts</a>
+                    <a href="{% url 'posts:author_post_list' %}" class="nav-link">My Posts</a>
                 </li>
                 {% endif %}
             {% endif %}

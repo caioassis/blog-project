@@ -24,6 +24,18 @@ class PostListView(ListView):
         return context
 
 
+class AuthorPostListView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'posts/home.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(author=self.request.user)
+        queryset = queryset.filter(published=True, deleted=False)
+        return queryset
+
+
 class PostDetailView(FormMixin, DetailView):
     model = Post
     template_name = 'posts/post.html'
@@ -58,5 +70,5 @@ class ReplyCreateView(CreateView):
         post = Post.objects.get(pk=self.kwargs['post_id'])
         reply.save()
         post.replies.add(reply)
-        messages.info(self.request, message='Your reply has to be approved before it can be displayed.')
+        messages.info(self.request, message='Your reply must be approved before it can be displayed.')
         return redirect(self.get_success_url())
