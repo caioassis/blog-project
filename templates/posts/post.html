@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% with post=view.object %}
+<div class="container">
+    <div class="card" style="width: 50%;">
+        <img class="card-img-top" width="200" height="200" src="{{ post.thumbnail.url|default:'https://via.placeholder.com/200' }}" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">{{ post.title }}</h5>
+            <p class="card-text">
+                {{ post.content }}
+            </p>
+            <p class="text-muted">Author: {{ post.author.username }}<br>Publication: {{ post.created_at|date:"m/d/Y H:i" }}</p>
+            <div class="float-right">
+                <a href="{% url 'posts:post_update' post.pk %}">Edit</a>
+                {% if request.user.is_superuser %}
+                |
+                <a href="">Delete</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-footer">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags}}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+            <form method="post" action="{% url 'posts:reply_create' post_id=post.pk %}">
+                {% csrf_token %}
+                <div class="row">
+                    &nbsp;<h6>Add a Reply</h6>
+                </div>
+                {% for field in form %}
+                <div class="form-group row">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+                <div class="row">
+                    <button type="submit" class="btn btn-success">
+                        Submit Reply
+                    </button>
+                </div>
+            </form>
+            <hr>
+            {% with replies=post.replies.all.filter(marked_as_deleted=True) %}
+            <h6>{{ replies.count }} Repl{{ replies.count|pluralize:"y,ies" }}</h6>
+                {% if replies %}
+                <br>
+                {% for reply in replies %}
+                <div style="border: 1px solid lightgrey; border-radius: 2px; padding: 10px; background: white; display: grid; margin-bottom: 10px;">
+                    <div>
+                        {{ reply.content }}
+                        <br>
+                        <p class="text-muted">{{ reply.name }} ({{ reply.email }})</p>
+                        {% if request.user.is_superuser %}<a class="float-right" href="#">Delete</a>{% endif %}
+
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+{% endwith %}
+{% endblock %}
