@@ -3,12 +3,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormMixin, UpdateView, CreateView, DeleteView
 from core.mixins import SuperUserRequiredMixin
 from posts.forms import ReplyForm, PostForm
 from posts.models import Post, Reply
+from core.decorators import recaptcha_required
 
 
 class AuditPostListView(LoginRequiredMixin, SuperUserRequiredMixin, ListView):
@@ -64,10 +66,11 @@ class PostDetailView(FormMixin, DetailView):
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
 
+    @method_decorator(recaptcha_required)
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        if form.is_valid():
+        if form.is_valid() and request.recaptcha_is_valid:
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
