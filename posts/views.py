@@ -127,6 +127,13 @@ class ReplyDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse_lazy('posts:post_detail', kwargs={'pk': self.kwargs['post_id']})
 
+    def get_object(self, queryset=None):
+        post = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        if not self.request.user.is_superuser:
+            if not self.request.user == post.author:
+                raise PermissionDenied
+        return post.replies.get(pk=self.kwargs['reply_id'])
+
     def get(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
 
@@ -142,4 +149,22 @@ class ApprovePostView(LoginRequiredMixin, SuperUserRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         post = self.get_object()
         post.approve()
+        return redirect(self.get_success_url())
+
+
+class ApproveReplyView(LoginRequiredMixin, View):
+
+    def get_success_url(self):
+        return reverse_lazy('posts:post_detail', kwargs={'pk': self.kwargs['post_id']})
+
+    def get_object(self, queryset=None):
+        post = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        if not self.request.user.is_superuser:
+            if not self.request.user == post.author:
+                raise PermissionDenied
+        return post.replies.get(pk=self.kwargs['reply_id'])
+
+    def get(self, request, *args, **kwargs):
+        reply = self.get_object()
+        reply.approve()
         return redirect(self.get_success_url())

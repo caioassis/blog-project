@@ -56,7 +56,7 @@
                             {{ reply.content }}
                             <br>
                             <p class="text-muted">{{ reply.name }} ({{ reply.email }})</p>
-                            {% if request.user.is_superuser or request.user == post.author %}<a class="float-right" href="">Delete</a>{% endif %}
+                            {% if request.user.is_superuser or request.user == post.author %}<a class="float-right" href="{% url 'posts:reply_delete' post_id=post.pk reply_id=reply.pk %}">Delete</a>{% endif %}
 
                         </div>
                     </div>
@@ -65,9 +65,10 @@
             {% endwith %}
             {% if request.user.is_superuser or request.user == post.author %}
                 {% with unapproved_replies=post.replies.unapproved %}
+                    {% if unapproved_replies %}
                     <hr>
                     <h6>{{ unapproved_replies.count }} Repl{{ unapproved_replies.count|pluralize:"y,ies" }} waiting for approval.</h6>
-                    {% if unapproved_replies %}
+
                         <br>
                         {% for reply in unapproved_replies %}
                         <div style="border: 1px solid lightgrey; border-radius: 2px; padding: 10px; background: white; display: grid; margin-bottom: 10px;">
@@ -76,11 +77,9 @@
                                 <br>
                                 <p class="text-muted">{{ reply.name }} ({{ reply.email }})</p>
                                 <span class="float-right">
-                                    <a href="">Approve</a>
+                                    <a href="{% url 'posts:reply_approve' post_id=post.pk reply_id=reply.pk %}">Approve</a>
                                     |
-                                    <a href="">Disapprove</a>
-                                    |
-                                    <a href="">Delete</a>
+                                    <a href="{% url 'posts:reply_delete' post_id=post.pk reply_id=reply.pk %}">Delete</a>
                                 </span>
 
                             </div>
