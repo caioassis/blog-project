@@ -81,3 +81,7 @@ MEDIA_URL = '/media/'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = 'posts/'
 LOGOUT_REDIRECT_URL = '/login/'
+
+# Google's ReCAPTCHA Configuration
+GOOGLE_RECAPTCHA_URL = os.environ.get('DJANGO_RECAPTCHA_URL', None)
+GOOGLE_RECAPTCHA_KEY = os.environ.get('DJANGO_RECAPTCHA_KEY', None)
