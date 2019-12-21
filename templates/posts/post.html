@@ -4,7 +4,7 @@
 {% with post=view.object %}
 <div class="container">
     <div class="card" style="width: 50%;">
-        <img class="card-img-top" width="200" height="200" src="{{ post.thumbnail.url|default:'https://via.placeholder.com/200' }}" alt="Card image cap">
+        <img class="card-img-top" width="200" height="200" src="{% if post.thumbnail %}{{ post.thumbnail.url }}{% else %}https://via.placeholder.com/200{% endif %}" alt="Card image cap">
         <div class="card-body">
             <h5 class="card-title">{{ post.title }}</h5>
             <p class="card-text">
@@ -12,20 +12,22 @@
             </p>
             <p class="text-muted">Author: {{ post.author.username }}<br>Publication: {{ post.created_at|date:"m/d/Y H:i" }}</p>
             <div class="float-right">
+                {% if request.user.is_superuser or request.user == post.author %}
                 <a href="{% url 'posts:post_update' post.pk %}">Edit</a>
-                {% if request.user.is_superuser %}
                 |
-                <a href="">Delete</a>
+                <a href="{% url 'posts:post_delete' post.pk %}">Delete</a>
                 {% endif %}
             </div>
         </div>
         <div class="card-footer">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags}}" role="alert">
-                {{ message }}
-            </div>
-            {% endfor %}
-            <form method="post" action="{% url 'posts:reply_create' post_id=post.pk %}">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags}}" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+            <form method="post" action="{# url 'posts:reply_create' post_id=post.pk #}" style="padding: 10px;">
                 {% csrf_token %}
                 <div class="row">
                     &nbsp;<h6>Add a Reply</h6>
@@ -34,6 +36,7 @@
                 <div class="form-group row">
                     <label>{{ field.label }}</label>
                     {{ field }}
+                    {% if field.errors %}<small style="color: red;">{{ field.errors }}</small>{% endif %}
                 </div>
                 {% endfor %}
                 <div class="row">
@@ -43,23 +46,49 @@
                 </div>
             </form>
             <hr>
-            {% with replies=post.replies.all %}
-            <h6>{{ replies.count }} Repl{{ replies.count|pluralize:"y,ies" }}</h6>
+            {% with replies=post.replies.approved %}
+                <h6>{{ replies.count }} Repl{{ replies.count|pluralize:"y,ies" }}</h6>
                 {% if replies %}
-                <br>
-                {% for reply in replies %}
-                <div style="border: 1px solid lightgrey; border-radius: 2px; padding: 10px; background: white; display: grid; margin-bottom: 10px;">
-                    <div>
-                        {{ reply.content }}
-                        <br>
-                        <p class="text-muted">{{ reply.name }} ({{ reply.email }})</p>
-                        {% if request.user.is_superuser %}<a class="float-right" href="#">Delete</a>{% endif %}
+                    <br>
+                    {% for reply in replies %}
+                    <div style="border: 1px solid lightgrey; border-radius: 2px; padding: 10px; background: white; display: grid; margin-bottom: 10px;">
+                        <div>
+                            {{ reply.content }}
+                            <br>
+                            <p class="text-muted">{{ reply.name }} ({{ reply.email }})</p>
+                            {% if request.user.is_superuser or request.user == post.author %}<a class="float-right" href="">Delete</a>{% endif %}
 
+                        </div>
                     </div>
-                </div>
-                {% endfor %}
-            {% endif %}
+                    {% endfor %}
+                {% endif %}
             {% endwith %}
+            {% if request.user.is_superuser or request.user == post.author %}
+                {% with unapproved_replies=post.replies.unapproved %}
+                    <hr>
+                    <h6>{{ unapproved_replies.count }} Repl{{ unapproved_replies.count|pluralize:"y,ies" }} waiting for approval.</h6>
+                    {% if unapproved_replies %}
+                        <br>
+                        {% for reply in unapproved_replies %}
+                        <div style="border: 1px solid lightgrey; border-radius: 2px; padding: 10px; background: white; display: grid; margin-bottom: 10px;">
+                            <div>
+                                {{ reply.content }}
+                                <br>
+                                <p class="text-muted">{{ reply.name }} ({{ reply.email }})</p>
+                                <span class="float-right">
+                                    <a href="">Approve</a>
+                                    |
+                                    <a href="">Disapprove</a>
+                                    |
+                                    <a href="">Delete</a>
+                                </span>
+
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
         </div>
     </div>
 </div>
