@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block head_content %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}
 
 {% block content %}
 {% with post=view.object %}
@@ -39,6 +42,8 @@
                     {% if field.errors %}<small style="color: red;">{{ field.errors }}</small>{% endif %}
                 </div>
                 {% endfor %}
+                <div class="g-recaptcha" data-sitekey="6LerDskUAAAAAJtEoxJh4y2o0hWxqAB37xv_RccN"></div>
+                <br/>
                 <div class="row">
                     <button type="submit" class="btn btn-success">
                         Submit Reply
