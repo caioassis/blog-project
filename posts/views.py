@@ -106,15 +106,22 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         return obj
 
 
-class PostDeleteView(LoginRequiredMixin, SuperUserRequiredMixin, DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = reverse_lazy('posts:author_post_list')
+
+    def get_object(self, queryset=None):
+        obj = super().get_object()
+        if not self.request.user.is_superuser:
+            if not obj.author == self.request.user:
+                raise PermissionDenied
+        return obj
 
     def get(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
 
 
-class ReplyDeleteView(LoginRequiredMixin, SuperUserRequiredMixin, DeleteView):
+class ReplyDeleteView(LoginRequiredMixin, DeleteView):
     model = Reply
 
     def get_success_url(self):
