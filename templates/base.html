@@ -30,13 +30,16 @@
                     <a class="nav-link" href="{% url 'core:author_list' %}">Authors</a>
                 </li>
                 <li>
-                    <a class="nav-link" href="#">Audit Posts</a>
+                    <a class="nav-link" href="{% url 'posts:audit_posts' %}">Audit Posts</a>
                 </li>
                 {% else %}
                 <li>
                     <a href="{% url 'posts:author_post_list' %}" class="nav-link">My Posts</a>
                 </li>
                 {% endif %}
+                <li>
+                    <a href="{% url 'posts:post_create' %}" class="nav-link">New Post</a>
+                </li>
             {% endif %}
         </ul>
         <div class="right">
