@@ -17,9 +17,6 @@ class LatestPostsFeed(Feed):
     def item_description(self, item):
         return item.content
 
-    def author_name(self, item):
-        return item.author.username
-
     # item_link is only needed if NewsItem has no get_absolute_url method.
     def item_link(self, item):
         return reverse_lazy('posts:post_detail', args=[item.pk])
