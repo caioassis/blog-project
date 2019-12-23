@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as AuthLoginView, LogoutView as AuthLogoutView
@@ -6,8 +7,6 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import FormView, ListView, UpdateView
-from django.contrib.auth import get_user_model
-
 from .forms import LoginForm, SignupForm, AuthorForm
 from .mixins import SuperUserRequiredMixin
 
@@ -66,7 +65,7 @@ class AuthorUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         user = form.save(commit=False)
         if not user.is_active:
-            user.posts.update(deleted=True)
+            user.posts.delete()
         user.save()
         return redirect(self.success_url)
 
@@ -95,6 +94,7 @@ class AuthorDeleteView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         user = self.get_object()
         user.is_active = False
-        user.posts.update(deleted=True)
+        for post in user.posts.all():
+            post.delete()
         user.save()
         return redirect(self.get_success_url())
