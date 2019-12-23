@@ -1,4 +1,5 @@
 from django.urls import path
+from .feeds import LatestPostsFeed
 from .views import (PostListView, PostDetailView, PostCreateView, PostUpdateView, AuthorPostListView,
                     AuditPostListView, PostDeleteView, ApprovePostView, ReplyDeleteView, ApproveReplyView)
 
@@ -13,4 +14,5 @@ urlpatterns = [
     path('<int:post_id>/replies/<int:reply_id>/delete/', ReplyDeleteView.as_view(), name='reply_delete'),
     path('<int:pk>/edit/', PostUpdateView.as_view(), name='post_update'),
     path('<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),
+    path('latest/feed/', LatestPostsFeed(), name='post_feed'),
 ]

@@ -43,6 +43,9 @@
                     <a href="{% url 'posts:post_create' %}" class="nav-link">New Post</a>
                 </li>
             {% endif %}
+            <li>
+                <a class="nav-link" href="{% url 'posts:post_feed' %}">Feed</a>
+            </li>
         </ul>
         <div class="right">
             {% if request.user.is_authenticated %}
