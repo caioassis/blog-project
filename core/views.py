@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as AuthLoginView, LogoutView as AuthLogoutView
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import FormView, ListView, UpdateView
@@ -71,7 +71,7 @@ class AuthorUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class AuthorDeleteView(LoginRequiredMixin, SuperUserRequiredMixin, View):
-    
+
     def get_success_url(self):
         return reverse_lazy('core:author_list')
 
