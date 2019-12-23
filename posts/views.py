@@ -21,6 +21,7 @@ class AuditPostListView(LoginRequiredMixin, SuperUserRequiredMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.unpublished()
+        queryset = queryset.order_by('-created_at')
         return queryset
 
 
@@ -32,6 +33,7 @@ class PostListView(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.published()
+        queryset = queryset.order_by('-created_at')
         return queryset
 
 
@@ -44,6 +46,7 @@ class AuthorPostListView(LoginRequiredMixin, ListView):
         queryset = super().get_queryset()
         queryset = queryset.filter(author=self.request.user)
         queryset = queryset.filter(approved=True, marked_as_deleted=False)
+        queryset = queryset.order_by('-created_at')
         return queryset
 
 
