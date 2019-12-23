@@ -45,7 +45,7 @@ def post_thumbnails_dir_path(instance, filename):
 class Post(models.Model):
     thumbnail = models.FileField(verbose_name='Thumbnail', upload_to=post_thumbnails_dir_path, blank=True, null=True)
     title = models.CharField(verbose_name='Title', max_length=50)
-    author = models.ForeignKey(verbose_name='Author', to=User, related_name='posts', on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(verbose_name='Author', to=User, related_name='posts', on_delete=models.CASCADE, null=True)
     content = models.TextField(verbose_name='Content')
     replies = models.ManyToManyField(verbose_name='Replies', to=Reply, blank=True)
     created_at = models.DateTimeField(verbose_name='Creation Date', auto_now_add=True, blank=True)
