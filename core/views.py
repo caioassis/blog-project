@@ -56,7 +56,7 @@ class AuthorUpdateView(LoginRequiredMixin, UpdateView):
         :return:
         """
         user = super().get_object()
-        if not user.is_superuser:
+        if not self.request.user.is_superuser:
             if not user == self.request.user:
                 # User from request is trying to update a different user, so deny the request.
                 raise PermissionDenied
