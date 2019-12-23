@@ -70,24 +70,8 @@ class AuthorUpdateView(LoginRequiredMixin, UpdateView):
         return redirect(self.success_url)
 
 
-class AuthorDeleteView(LoginRequiredMixin, View):
-    """
-    View to delete a user. Used instead of a Delete view to perform the action thro
-    """
-
-    def get_object(self, queryset=None):
-        """
-        Check if the request.user has permission to update the user object.
-        :param queryset:
-        :return:
-        """
-        user = get_object_or_404(User, pk=self.kwargs['pk'])
-        if not self.request.user.is_superuser:
-            if not user == self.request.user:
-                # User from request is trying to update a different user, so deny the request.
-                raise PermissionDenied
-        return user
-
+class AuthorDeleteView(LoginRequiredMixin, SuperUserRequiredMixin, View):
+    
     def get_success_url(self):
         return reverse_lazy('core:author_list')
 
