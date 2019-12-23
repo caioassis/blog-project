@@ -12,6 +12,7 @@ class Reply(models.Model):
     name = models.CharField(verbose_name='Name', max_length=40)
     email = models.EmailField(verbose_name='Email', unique=False)
     content = models.CharField(verbose_name='Content', max_length=250)
+    created_at = models.DateTimeField(verbose_name='Creation Date', auto_now_add=True)
     approved = models.BooleanField(verbose_name='Approved', default=False)
     marked_as_deleted = models.BooleanField(verbose_name='Marked as deleted', default=False)
 
@@ -29,6 +30,7 @@ class Reply(models.Model):
     class Meta:
         verbose_name = 'Reply'
         verbose_name_plural = 'Replies'
+        ordering = ['-created_at', '-approved']
 
 
 def post_thumbnails_dir_path(instance, filename):

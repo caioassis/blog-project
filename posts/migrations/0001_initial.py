@@ -22,6 +22,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=40, verbose_name='Name')),
                 ('email', models.EmailField(max_length=254, verbose_name='Email')),
                 ('content', models.CharField(max_length=250, verbose_name='Content')),
+                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation Date')),
                 ('marked_as_deleted', models.BooleanField(default=False, verbose_name='Marked as deleted')),
             ],
             options={
