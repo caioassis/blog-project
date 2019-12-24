@@ -60,7 +60,7 @@
                         <div>
                             {{ reply.content }}
                             <br>
-                            <p class="text-muted">{{ reply.name }} ({{ reply.email }})</p>
+                            <p class="text-muted">{{ reply.name }} at {{ reply.created_at|date:"m/d/Y H:i" }}</p>
                             {% if request.user.is_superuser or request.user == post.author %}<a class="float-right" href="{% url 'posts:reply_delete' post_id=post.pk reply_id=reply.pk %}">Delete</a>{% endif %}
 
                         </div>
@@ -80,7 +80,7 @@
                             <div>
                                 {{ reply.content }}
                                 <br>
-                                <p class="text-muted">{{ reply.name }} ({{ reply.email }})</p>
+                                <p class="text-muted">{{ reply.name }} at {{ reply.created_at|date:"m/d/Y H:i" }}</p>
                                 <span class="float-right">
                                     <a href="{% url 'posts:reply_approve' post_id=post.pk reply_id=reply.pk %}">Approve</a>
                                     |
