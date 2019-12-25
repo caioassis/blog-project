@@ -15,6 +15,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # External Apps
+    'debug_toolbar',
     # Project Apps
     'posts',
 ]
@@ -23,6 +25,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -85,3 +88,6 @@ LOGOUT_REDIRECT_URL = '/login/'
 # Google's ReCAPTCHA Configuration
 GOOGLE_RECAPTCHA_URL = os.environ.get('DJANGO_RECAPTCHA_URL', None)
 GOOGLE_RECAPTCHA_KEY = os.environ.get('DJANGO_RECAPTCHA_KEY', None)
+
+# Django Debug Toolbar Configuration
+INTERNAL_IPS = ['127.0.0.1']
