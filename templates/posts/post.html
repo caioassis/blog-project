@@ -52,7 +52,9 @@
             </form>
             <hr>
             {% with replies=post.replies.approved %}
-                <h6>{{ replies.count }} Repl{{ replies.count|pluralize:"y,ies" }}</h6>
+                {% with reply_count=replies.count %}
+                <h6>{{ reply_count }} Repl{{ reply_count|pluralize:"y,ies" }}</h6>
+                {% endwith %}
                 {% if replies %}
                     <br>
                     {% for reply in replies %}
@@ -72,8 +74,9 @@
                 {% with unapproved_replies=post.replies.unapproved %}
                     {% if unapproved_replies %}
                     <hr>
-                    <h6>{{ unapproved_replies.count }} Repl{{ unapproved_replies.count|pluralize:"y,ies" }} waiting for approval.</h6>
-
+                    {% with unapproved_replies_count=unapproved_replies.count %}
+                    <h6>{{ unapproved_replies_count }} Repl{{ unapproved_replies_count|pluralize:"y,ies" }} waiting for approval.</h6>
+                    {% endwith %}
                         <br>
                         {% for reply in unapproved_replies %}
                         <div style="border: 1px solid lightgrey; border-radius: 2px; padding: 10px; background: white; display: grid; margin-bottom: 10px;">

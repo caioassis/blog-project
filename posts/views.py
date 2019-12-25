@@ -33,6 +33,7 @@ class PostListView(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.published()
+        queryset = queryset.select_related('author')
         queryset = queryset.order_by('-created_at')
         return queryset
 
@@ -45,7 +46,7 @@ class AuthorPostListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.filter(author=self.request.user)
-        queryset = queryset.filter(approved=True, marked_as_deleted=False)
+        queryset = queryset.published()
         queryset = queryset.order_by('-created_at')
         return queryset
 

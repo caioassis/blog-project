@@ -22,7 +22,9 @@
                     <p class="card-text">
                         <small class="text-muted">By: {{ post.author.username }} at {{ post.created_at|date:"m/d/Y H:i" }}</small>
                         &nbsp;
-                        <span class="badge badge-primary">{{ post.replies.approved.count }} Repl{{ post.replies.approved.count|pluralize:"y,ies" }}</span>
+                        {% with approved_replies_count=post.replies.approved.count %}
+                        <span class="badge badge-primary">{{ approved_replies_count }} Repl{{ approved_replies_count|pluralize:"y,ies" }}</span>
+                        {% endwith %}
                         <span class="float-right">
                             <a class="" href="{% url 'posts:post_detail' post.pk %}">Details</a>
                             {% if request.user.is_superuser or request.user == post.author %}
