@@ -1,2 +1,2 @@
 # blog-project
-Blog Project with basic functionalities.
+Blog Project built with Django Web Framework.
