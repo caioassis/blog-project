@@ -41,7 +41,12 @@ def post_thumbnails_dir_path(instance, filename):
     :return:
     """
     today = timezone.now()
-    return f'thumbnails/{instance.author}/{today.strftime("%Y/%m/%d")}/{uuid.uuid4()}-{filename}'
+    return 'thumbnails/{author}/{date}/{uniqueid}-{filename}'.format(
+        author=instance.author,
+        date=today.strftime("%Y/%m/%d"),
+        uniqueid=uuid.uuid4(),
+        filename=filename
+    )
 
 
 class Post(models.Model):

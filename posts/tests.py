@@ -22,7 +22,7 @@ class PostTestCase(TestCase):
         Post.objects.bulk_create(
             [
                 Post(
-                    title=f'Test Post {str(i)}',
+                    title='Test Post {}'.format(str(i)),
                     content='Test content',
                     author=user
                 ) for i in range(1, 6)
@@ -37,7 +37,7 @@ class PostTestCase(TestCase):
                 Reply.objects.create(
                     name='Caio Eduardo Borges Assis',
                     email='caio@caio.com',
-                    content=f'Post Reply {str(i)}'
+                    content='Post Reply {}'.format(str(i))
                 )
             )
         post.replies.get(content='Post Reply 1').approve()
@@ -96,7 +96,7 @@ class PostTestCase(TestCase):
         for post in Post.objects.unpublished():
             post.approve()
         expected_post_sorting = [
-            {'title': f'Test Post {str(i)}'} for i in range(5, 0, -1)
+            {'title': 'Test Post {}'.format(str(i))} for i in range(5, 0, -1)
         ]
         response = self.client.get(reverse_lazy('posts:home'))
         posts = list(response.context['posts'].values('title'))
@@ -110,7 +110,7 @@ class PostTestCase(TestCase):
         # Parse RSS feed and find all items
         root = ElementTree.fromstring(content)
         items = root.find('channel').findall('item')
-        expected_feed_posts = [{'title': f'Test Post {str(i)}'} for i in range(5, 0, -1)]
+        expected_feed_posts = [{'title': 'Test Post {}'.format(str(i))} for i in range(5, 0, -1)]
         feed_posts = [{'title': item.find('title').text} for item in items]
         self.assertEqual(feed_posts, expected_feed_posts)
 
